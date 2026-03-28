@@ -1,0 +1,123 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Nursing Fundamentals"
+  description="Core nursing skills, vital signs, patient assessment, and care planning notes."
+>
+  <div class="page-header">
+    <h1>📋 Nursing Fundamentals</h1>
+    <p>Core concepts, skills, and frameworks every nursing student must master.</p>
+  </div>
+
+  <div class="content">
+    <section class="note-section">
+      <h2>Vital Signs</h2>
+      <table>
+        <thead>
+          <tr><th>Parameter</th><th>Normal Adult Range</th><th>Critical Values</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Temperature</td><td>36.1 – 37.2 °C (97 – 99 °F)</td><td>&lt;35 °C or &gt;41 °C</td></tr>
+          <tr><td>Heart Rate</td><td>60 – 100 bpm</td><td>&lt;40 or &gt;150 bpm</td></tr>
+          <tr><td>Respiratory Rate</td><td>12 – 20 breaths/min</td><td>&lt;8 or &gt;30 breaths/min</td></tr>
+          <tr><td>Blood Pressure</td><td>90–120 / 60–80 mmHg</td><td>SBP &lt;90 or &gt;180 mmHg</td></tr>
+          <tr><td>SpO₂</td><td>95 – 100 %</td><td>&lt;90 %</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="note-section">
+      <h2>ADPIE Nursing Process</h2>
+      <ol class="steps">
+        <li><strong>Assessment</strong> – Collect subjective &amp; objective data (health history, physical exam, diagnostics).</li>
+        <li><strong>Diagnosis</strong> – Identify nursing diagnoses using NANDA-I taxonomy (PES format: Problem, Etiology, Signs/Symptoms).</li>
+        <li><strong>Planning</strong> – Set SMART goals and expected outcomes; prioritize using Maslow's hierarchy.</li>
+        <li><strong>Implementation</strong> – Carry out interventions: independent, dependent, and collaborative.</li>
+        <li><strong>Evaluation</strong> – Compare outcomes to goals; revise plan as needed.</li>
+      </ol>
+    </section>
+
+    <section class="note-section">
+      <h2>SBAR Communication</h2>
+      <div class="sbar-grid">
+        <div class="sbar-card"><span class="sbar-letter">S</span><div><strong>Situation</strong><p>What is happening right now with the patient?</p></div></div>
+        <div class="sbar-card"><span class="sbar-letter">B</span><div><strong>Background</strong><p>Relevant history, diagnosis, medications, labs.</p></div></div>
+        <div class="sbar-card"><span class="sbar-letter">A</span><div><strong>Assessment</strong><p>Your clinical interpretation of the situation.</p></div></div>
+        <div class="sbar-card"><span class="sbar-letter">R</span><div><strong>Recommendation</strong><p>What action do you think should be taken?</p></div></div>
+      </div>
+    </section>
+
+    <section class="note-section">
+      <h2>Infection Control</h2>
+      <ul class="bullet-list">
+        <li><strong>Standard Precautions</strong> – Hand hygiene, PPE, safe sharps disposal; apply to ALL patients.</li>
+        <li><strong>Contact Precautions</strong> – Gown + gloves; MRSA, C. diff, VRE.</li>
+        <li><strong>Droplet Precautions</strong> – Surgical mask; influenza, pertussis, meningococcal disease.</li>
+        <li><strong>Airborne Precautions</strong> – N95 respirator + negative-pressure room; TB, measles, varicella.</li>
+        <li><strong>Hand Hygiene</strong> – Soap &amp; water preferred for C. diff; alcohol-based hand rub for most others.</li>
+      </ul>
+    </section>
+
+    <section class="note-section">
+      <h2>Maslow's Hierarchy in Nursing Priority</h2>
+      <ol class="steps">
+        <li><strong>Physiological</strong> – Airway, breathing, circulation, nutrition, elimination (always first).</li>
+        <li><strong>Safety &amp; Security</strong> – Fall prevention, medication safety, infection control.</li>
+        <li><strong>Love &amp; Belonging</strong> – Family support, therapeutic communication.</li>
+        <li><strong>Esteem</strong> – Patient autonomy, dignity, culturally sensitive care.</li>
+        <li><strong>Self-Actualization</strong> – Patient education, chronic disease self-management.</li>
+      </ol>
+    </section>
+  </div>
+</Layout>
+
+<style>
+  .page-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--color-border);
+  }
+  .page-header h1 { font-size: 1.75rem; font-weight: 700; color: var(--color-primary-dark); }
+  .page-header p { color: var(--color-text-muted); margin-top: 0.4rem; }
+
+  .content { display: flex; flex-direction: column; gap: 1.75rem; }
+
+  .note-section {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+  }
+
+  .note-section h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  th { background: var(--color-primary); color: white; padding: 0.6rem 0.75rem; text-align: left; }
+  td { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--color-border); }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: var(--color-bg); }
+
+  .steps { padding-left: 1.5rem; display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.95rem; }
+  .steps li { line-height: 1.6; }
+
+  .bullet-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.95rem; }
+  .bullet-list li { padding-left: 1.25rem; position: relative; line-height: 1.6; }
+  .bullet-list li::before { content: '•'; position: absolute; left: 0; color: var(--color-primary); font-weight: 700; }
+
+  .sbar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .sbar-card { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.9rem; background: var(--color-bg); border-radius: var(--radius); border: 1px solid var(--color-border); }
+  .sbar-letter { font-size: 1.5rem; font-weight: 800; color: var(--color-primary); flex-shrink: 0; line-height: 1; }
+  .sbar-card p { font-size: 0.85rem; color: var(--color-text-muted); margin-top: 0.2rem; }
+
+  @media (max-width: 600px) { .sbar-grid { grid-template-columns: 1fr; } }
+</style>

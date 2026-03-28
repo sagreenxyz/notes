@@ -1,0 +1,139 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Pharmacology"
+  description="Drug classifications, mechanisms, nursing implications, and side effects for nursing students."
+>
+  <div class="page-header">
+    <h1>💊 Pharmacology</h1>
+    <p>Drug classifications, mechanisms of action, and nursing considerations.</p>
+  </div>
+
+  <div class="content">
+    <section class="note-section">
+      <h2>Pharmacokinetics (ADME)</h2>
+      <div class="adme-grid">
+        <div class="adme-card">
+          <span class="adme-letter">A</span>
+          <div><strong>Absorption</strong><p>How drug enters circulation. Affected by route, food, pH, blood flow.</p></div>
+        </div>
+        <div class="adme-card">
+          <span class="adme-letter">D</span>
+          <div><strong>Distribution</strong><p>Drug movement to tissues. Affected by protein binding, lipid solubility, BBB.</p></div>
+        </div>
+        <div class="adme-card">
+          <span class="adme-letter">M</span>
+          <div><strong>Metabolism</strong><p>Primarily liver (CYP450 enzymes). First-pass effect reduces oral bioavailability.</p></div>
+        </div>
+        <div class="adme-card">
+          <span class="adme-letter">E</span>
+          <div><strong>Excretion</strong><p>Primarily kidneys. Renal/hepatic impairment → dose adjustments required.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section">
+      <h2>Cardiovascular Drugs</h2>
+      <table>
+        <thead>
+          <tr><th>Class</th><th>Examples</th><th>Use</th><th>Key Nursing Considerations</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Beta-Blockers</td><td>Metoprolol, Atenolol, Carvedilol</td><td>HTN, HF, angina, arrhythmias</td><td>Monitor HR &amp; BP; do not abruptly stop; assess for bradycardia</td></tr>
+          <tr><td>ACE Inhibitors</td><td>Lisinopril, Enalapril, Ramipril</td><td>HTN, HF, DM nephropathy</td><td>Monitor for dry cough, hyperkalemia, angioedema; check BUN/Cr</td></tr>
+          <tr><td>ARBs</td><td>Losartan, Valsartan, Candesartan</td><td>HTN, HF, DM nephropathy</td><td>Alternative to ACE inhibitors (no cough); monitor K⁺ and renal function</td></tr>
+          <tr><td>Loop Diuretics</td><td>Furosemide (Lasix), Bumetanide</td><td>Edema, HF, HTN</td><td>Monitor I&amp;O, daily weight, electrolytes (↓K⁺, ↓Na⁺, ↓Mg²⁺)</td></tr>
+          <tr><td>Digoxin</td><td>Digoxin</td><td>HF, A-fib rate control</td><td>Narrow therapeutic index (0.5–2 ng/mL); assess apical HR; toxicity signs: nausea, visual changes, bradycardia</td></tr>
+          <tr><td>Statins</td><td>Atorvastatin, Rosuvastatin, Simvastatin</td><td>Hyperlipidemia, CV risk reduction</td><td>Monitor LFTs; assess for myopathy/rhabdomyolysis (muscle pain, ↑CK)</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="note-section">
+      <h2>Anticoagulants &amp; Antiplatelets</h2>
+      <table>
+        <thead>
+          <tr><th>Drug</th><th>Mechanism</th><th>Monitor</th><th>Reversal Agent</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Heparin (UFH)</td><td>Activates antithrombin III → inhibits thrombin &amp; factor Xa</td><td>aPTT (1.5–2.5× normal), platelets (HIT risk)</td><td>Protamine sulfate</td></tr>
+          <tr><td>Warfarin</td><td>Inhibits vitamin K–dependent clotting factors (II, VII, IX, X)</td><td>INR (therapeutic range varies by indication)</td><td>Vitamin K, FFP, PCC</td></tr>
+          <tr><td>Enoxaparin (LMWH)</td><td>Factor Xa inhibitor (primarily)</td><td>Renal function; anti-Xa levels in special populations</td><td>Protamine sulfate (partial)</td></tr>
+          <tr><td>Rivaroxaban / Apixaban</td><td>Direct factor Xa inhibitors (DOACs)</td><td>Renal function; bleeding signs</td><td>Andexanet alfa</td></tr>
+          <tr><td>Dabigatran</td><td>Direct thrombin inhibitor (DOAC)</td><td>Renal function; bleeding signs</td><td>Idarucizumab</td></tr>
+          <tr><td>Aspirin</td><td>Irreversible COX inhibition → ↓TXA₂</td><td>Bleeding, GI upset, tinnitus (toxicity)</td><td>No specific reversal; platelet transfusion</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="note-section">
+      <h2>Diabetes Medications</h2>
+      <table>
+        <thead>
+          <tr><th>Class</th><th>Examples</th><th>Mechanism</th><th>Key Nursing Points</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Insulin (Rapid)</td><td>Lispro, Aspart, Glulisine</td><td>Glucose uptake</td><td>Give 0–15 min before meals; peak 1–2 hrs</td></tr>
+          <tr><td>Insulin (Long-Acting)</td><td>Glargine, Detemir, Degludec</td><td>Basal glucose control</td><td>Do NOT mix; no pronounced peak; give same time daily</td></tr>
+          <tr><td>Metformin</td><td>Metformin</td><td>↓Hepatic glucose production</td><td>Hold before contrast dye; risk of lactic acidosis; check renal function</td></tr>
+          <tr><td>Sulfonylureas</td><td>Glipizide, Glyburide, Glimepiride</td><td>↑Insulin secretion</td><td>Hypoglycemia risk; take with food</td></tr>
+          <tr><td>SGLT-2 Inhibitors</td><td>Empagliflozin, Dapagliflozin</td><td>↑Urinary glucose excretion</td><td>UTI/yeast infection risk; DKA risk (even with normal glucose); hold before surgery</td></tr>
+          <tr><td>GLP-1 Agonists</td><td>Semaglutide, Liraglutide</td><td>↑Insulin, ↓glucagon, ↓appetite</td><td>Nausea common; pancreatitis risk; weight loss benefit</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="note-section">
+      <h2>Pain Management</h2>
+      <ul class="bullet-list">
+        <li><strong>WHO Analgesic Ladder</strong> – Step 1: Non-opioids (NSAIDs, acetaminophen) → Step 2: Mild opioids (tramadol, codeine) → Step 3: Strong opioids (morphine, oxycodone, fentanyl).</li>
+        <li><strong>Opioid Side Effects</strong> – Respiratory depression (most dangerous), constipation (always prevent), nausea/vomiting, urinary retention, sedation.</li>
+        <li><strong>Naloxone (Narcan)</strong> – Opioid reversal agent; short half-life (may need repeat doses or infusion); monitor for re-narcotization.</li>
+        <li><strong>NSAIDs</strong> – Avoid in renal impairment, GI ulcers, and &gt;3rd trimester pregnancy; monitor for GI bleeding.</li>
+        <li><strong>Acetaminophen</strong> – Max 4 g/day (2 g/day in liver disease or heavy alcohol use); hepatotoxicity risk in overdose.</li>
+      </ul>
+    </section>
+
+    <section class="note-section">
+      <h2>High-Alert Medications (ISMP)</h2>
+      <ul class="bullet-list">
+        <li>Insulin — always double-check dose and type; use dedicated insulin syringes.</li>
+        <li>Anticoagulants — heparin infusion requires two-nurse verification of rate.</li>
+        <li>Concentrated electrolytes (KCl, NaCl &gt;0.9%) — never give undiluted IV KCl (fatal arrhythmias).</li>
+        <li>Opioids — monitor respiratory rate, sedation level; have naloxone available.</li>
+        <li>Chemotherapy agents — use PPE; verify with pharmacist; strict extravasation protocols.</li>
+        <li>Neuromuscular blocking agents — must be on ventilator; keep reversal agents available.</li>
+      </ul>
+    </section>
+  </div>
+</Layout>
+
+<style>
+  .page-header { margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid var(--color-border); }
+  .page-header h1 { font-size: 1.75rem; font-weight: 700; color: var(--color-primary-dark); }
+  .page-header p { color: var(--color-text-muted); margin-top: 0.4rem; }
+
+  .content { display: flex; flex-direction: column; gap: 1.75rem; }
+
+  .note-section { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow); }
+  .note-section h2 { font-size: 1.1rem; font-weight: 600; color: var(--color-primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--color-border); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+  th { background: var(--color-primary); color: white; padding: 0.6rem 0.75rem; text-align: left; }
+  td { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--color-border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: var(--color-bg); }
+
+  .bullet-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.95rem; }
+  .bullet-list li { padding-left: 1.25rem; position: relative; line-height: 1.6; }
+  .bullet-list li::before { content: '•'; position: absolute; left: 0; color: var(--color-primary); font-weight: 700; }
+
+  .adme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .adme-card { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.9rem; background: var(--color-bg); border-radius: var(--radius); border: 1px solid var(--color-border); }
+  .adme-letter { font-size: 1.5rem; font-weight: 800; color: var(--color-primary); flex-shrink: 0; line-height: 1; }
+  .adme-card p { font-size: 0.85rem; color: var(--color-text-muted); margin-top: 0.2rem; }
+
+  @media (max-width: 700px) { .adme-grid { grid-template-columns: 1fr; } table { font-size: 0.8rem; } }
+</style>

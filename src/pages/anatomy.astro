@@ -1,0 +1,110 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Anatomy & Physiology"
+  description="Body systems, structures, and physiological processes for nursing students."
+>
+  <div class="page-header">
+    <h1>🫀 Anatomy &amp; Physiology</h1>
+    <p>Key body systems and their functions — essential knowledge for nursing practice.</p>
+  </div>
+
+  <div class="content">
+    <section class="note-section">
+      <h2>Cardiovascular System</h2>
+      <ul class="bullet-list">
+        <li><strong>Heart Chambers</strong> – Right atrium → right ventricle (pulmonary) → left atrium → left ventricle (systemic).</li>
+        <li><strong>Cardiac Output (CO)</strong> – CO = Heart Rate × Stroke Volume. Normal: 4–8 L/min.</li>
+        <li><strong>Conduction System</strong> – SA node → AV node → Bundle of His → Bundle branches → Purkinje fibers.</li>
+        <li><strong>Coronary Arteries</strong> – Left main (LAD + circumflex) and right coronary artery (RCA) supply myocardium.</li>
+        <li><strong>Blood Pressure Regulation</strong> – Renin-angiotensin-aldosterone system (RAAS), baroreceptors, ADH.</li>
+      </ul>
+    </section>
+
+    <section class="note-section">
+      <h2>Respiratory System</h2>
+      <ul class="bullet-list">
+        <li><strong>Upper Airway</strong> – Nose, pharynx, larynx; warm, filter, and humidify air.</li>
+        <li><strong>Lower Airway</strong> – Trachea → bronchi → bronchioles → alveoli (gas exchange).</li>
+        <li><strong>Surfactant</strong> – Produced by type II pneumocytes; reduces surface tension, prevents alveolar collapse.</li>
+        <li><strong>Gas Exchange</strong> – O₂ diffuses into blood; CO₂ diffuses out. Driven by partial pressure gradients.</li>
+        <li><strong>Control of Breathing</strong> – Primary: CO₂ levels (medullary chemoreceptors). Secondary: O₂ (peripheral chemoreceptors).</li>
+      </ul>
+    </section>
+
+    <section class="note-section">
+      <h2>Renal System</h2>
+      <ul class="bullet-list">
+        <li><strong>Nephron</strong> – Glomerulus, Bowman's capsule, proximal tubule, loop of Henle, distal tubule, collecting duct.</li>
+        <li><strong>GFR</strong> – Normal: ~120 mL/min. Estimated by eGFR (CKD staging uses eGFR and albumin-to-creatinine ratio).</li>
+        <li><strong>Functions</strong> – Fluid/electrolyte balance, acid-base regulation, waste excretion, BP regulation, erythropoietin production.</li>
+        <li><strong>Urinalysis Key Values</strong> – pH 4.5–8, specific gravity 1.001–1.030, no glucose/protein normally.</li>
+      </ul>
+    </section>
+
+    <section class="note-section">
+      <h2>Neurological System</h2>
+      <ul class="bullet-list">
+        <li><strong>CNS</strong> – Brain (cerebrum, cerebellum, brainstem) + spinal cord.</li>
+        <li><strong>PNS</strong> – Somatic (voluntary) and autonomic (sympathetic/parasympathetic) nervous systems.</li>
+        <li><strong>Glasgow Coma Scale (GCS)</strong> – Eyes (4), Verbal (5), Motor (6). Max 15; ≤8 = coma.</li>
+        <li><strong>Cranial Nerves</strong> – 12 pairs; mnemonic: <em>On Old Olympus Towering Tops A Finn And German Viewed Some Hops</em>.</li>
+        <li><strong>ICP</strong> – Normal: 5–15 mmHg. Cushing's triad (↑BP, ↓HR, irregular respirations) = imminent herniation.</li>
+      </ul>
+    </section>
+
+    <section class="note-section">
+      <h2>Endocrine System</h2>
+      <table>
+        <thead>
+          <tr><th>Gland</th><th>Key Hormone(s)</th><th>Function</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Pituitary</td><td>ADH, GH, TSH, ACTH, FSH, LH</td><td>Master gland; regulates other glands</td></tr>
+          <tr><td>Thyroid</td><td>T3, T4, Calcitonin</td><td>Metabolism, calcium regulation</td></tr>
+          <tr><td>Parathyroid</td><td>PTH</td><td>↑ serum calcium</td></tr>
+          <tr><td>Adrenal Cortex</td><td>Cortisol, Aldosterone</td><td>Stress response, Na/K balance</td></tr>
+          <tr><td>Pancreas</td><td>Insulin, Glucagon</td><td>Blood glucose regulation</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="note-section">
+      <h2>Acid-Base Balance</h2>
+      <table>
+        <thead>
+          <tr><th>Condition</th><th>pH</th><th>PaCO₂</th><th>HCO₃⁻</th><th>Common Causes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Respiratory Acidosis</td><td>↓</td><td>↑</td><td>Normal/↑</td><td>COPD, hypoventilation, opioids</td></tr>
+          <tr><td>Respiratory Alkalosis</td><td>↑</td><td>↓</td><td>Normal/↓</td><td>Hyperventilation, anxiety, PE</td></tr>
+          <tr><td>Metabolic Acidosis</td><td>↓</td><td>Normal/↓</td><td>↓</td><td>DKA, diarrhea, renal failure</td></tr>
+          <tr><td>Metabolic Alkalosis</td><td>↑</td><td>Normal/↑</td><td>↑</td><td>Vomiting, antacids, diuretics</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</Layout>
+
+<style>
+  .page-header { margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid var(--color-border); }
+  .page-header h1 { font-size: 1.75rem; font-weight: 700; color: var(--color-primary-dark); }
+  .page-header p { color: var(--color-text-muted); margin-top: 0.4rem; }
+
+  .content { display: flex; flex-direction: column; gap: 1.75rem; }
+
+  .note-section { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow); }
+  .note-section h2 { font-size: 1.1rem; font-weight: 600; color: var(--color-primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--color-border); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  th { background: var(--color-primary); color: white; padding: 0.6rem 0.75rem; text-align: left; }
+  td { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--color-border); }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: var(--color-bg); }
+
+  .bullet-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.95rem; }
+  .bullet-list li { padding-left: 1.25rem; position: relative; line-height: 1.6; }
+  .bullet-list li::before { content: '•'; position: absolute; left: 0; color: var(--color-primary); font-weight: 700; }
+</style>

@@ -1,0 +1,195 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="NCLEX Prep"
+  description="NCLEX-RN exam preparation: strategies, key concepts, and practice question tips."
+>
+  <div class="page-header">
+    <h1>✏️ NCLEX Prep</h1>
+    <p>Test-taking strategies, priority frameworks, and key concepts for NCLEX-RN success.</p>
+  </div>
+
+  <div class="content">
+    <section class="note-section">
+      <h2>Test-Taking Strategies</h2>
+      <ul class="bullet-list">
+        <li><strong>Read the question twice</strong> – Identify the subject (who), the action needed, and any qualifying words (first, priority, best, most).</li>
+        <li><strong>Eliminate distractors</strong> – Remove options that are clearly wrong; choose the best remaining answer.</li>
+        <li><strong>Maslow first</strong> – Physiological needs (airway, breathing, circulation) take priority over psychosocial needs.</li>
+        <li><strong>Assess before acting</strong> – Unless the patient is in immediate danger, gather data before implementing an intervention.</li>
+        <li><strong>"Which client do you see first?"</strong> – Go to the most unstable or the one with the most acute change from baseline.</li>
+        <li><strong>Delegation rules</strong> – RN: assessment, teaching, unstable patients, care planning. LPN: stable patients, routine medications. UAP: ADLs, vital signs on stable patients, basic hygiene.</li>
+      </ul>
+    </section>
+
+    <section class="note-section">
+      <h2>NCLEX-RN Client Needs Framework</h2>
+      <table>
+        <thead>
+          <tr><th>Category</th><th>% of Exam</th><th>Key Topics</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Safe &amp; Effective Care Environment</td><td>~38%</td><td>Management of care, safety &amp; infection control</td></tr>
+          <tr><td>Health Promotion &amp; Maintenance</td><td>~9%</td><td>Growth &amp; development, prevention, screening</td></tr>
+          <tr><td>Psychosocial Integrity</td><td>~9%</td><td>Mental health, coping, therapeutic communication</td></tr>
+          <tr><td>Physiological Integrity</td><td>~44%</td><td>Basic care, pharmacology, reduction of risk, physiology adaptation</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="note-section">
+      <h2>Priority Setting Frameworks</h2>
+      <div class="framework-grid">
+        <div class="framework-card">
+          <h3>ABC Priority</h3>
+          <ol>
+            <li>Airway</li>
+            <li>Breathing</li>
+            <li>Circulation</li>
+          </ol>
+          <p class="note">Always address airway first unless the question specifies otherwise.</p>
+        </div>
+        <div class="framework-card">
+          <h3>Maslow's Hierarchy</h3>
+          <ol>
+            <li>Physiological</li>
+            <li>Safety</li>
+            <li>Love/Belonging</li>
+            <li>Esteem</li>
+            <li>Self-Actualization</li>
+          </ol>
+        </div>
+        <div class="framework-card">
+          <h3>CURE Priority</h3>
+          <ol>
+            <li>Critical (life-threatening)</li>
+            <li>Urgent (significant change)</li>
+            <li>Routine (stable needs)</li>
+            <li>Expected (anticipated outcomes)</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="note-section">
+      <h2>Therapeutic Communication</h2>
+      <table>
+        <thead>
+          <tr><th>Technique</th><th>Example</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Open-ended questions</td><td>"Tell me more about how you're feeling."</td></tr>
+          <tr><td>Reflection</td><td>"It sounds like you're worried about the surgery."</td></tr>
+          <tr><td>Clarification</td><td>"Can you help me understand what you mean by that?"</td></tr>
+          <tr><td>Active listening</td><td>Nodding, maintaining eye contact, minimal prompts ("Go on…")</td></tr>
+          <tr><td>Silence</td><td>Allowing therapeutic pauses; do not rush to fill silence.</td></tr>
+          <tr><td class="danger">False reassurance ✗</td><td class="danger">"Everything will be fine, don't worry."</td></tr>
+          <tr><td class="danger">Giving advice ✗</td><td class="danger">"If I were you, I would…"</td></tr>
+          <tr><td class="danger">Closed questions ✗</td><td class="danger">"Are you feeling better?" (yes/no only)</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="note-section">
+      <h2>Critical Lab Values — Know These!</h2>
+      <table>
+        <thead>
+          <tr><th>Lab</th><th>Normal</th><th>Critical Low</th><th>Critical High</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Sodium (Na⁺)</td><td>135–145 mEq/L</td><td>&lt;120 mEq/L</td><td>&gt;160 mEq/L</td></tr>
+          <tr><td>Potassium (K⁺)</td><td>3.5–5.0 mEq/L</td><td>&lt;2.5 mEq/L</td><td>&gt;6.5 mEq/L</td></tr>
+          <tr><td>Glucose</td><td>70–100 mg/dL</td><td>&lt;40 mg/dL</td><td>&gt;500 mg/dL</td></tr>
+          <tr><td>Hemoglobin</td><td>M: 13.5–17.5; F: 12–16 g/dL</td><td>&lt;7 g/dL</td><td>&gt;20 g/dL</td></tr>
+          <tr><td>Platelets</td><td>150,000–400,000/μL</td><td>&lt;50,000/μL</td><td>&gt;1,000,000/μL</td></tr>
+          <tr><td>INR</td><td>0.8–1.2</td><td>—</td><td>&gt;3.0 (on warfarin: &gt;4.0)</td></tr>
+          <tr><td>Creatinine</td><td>M: 0.7–1.3; F: 0.5–1.1 mg/dL</td><td>—</td><td>&gt;10 mg/dL</td></tr>
+          <tr><td>pH (arterial)</td><td>7.35–7.45</td><td>&lt;7.2</td><td>&gt;7.6</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="note-section">
+      <h2>Delegation Quick Reference</h2>
+      <div class="delegation-grid">
+        <div class="delegation-card rn">
+          <h3>🩺 RN Only</h3>
+          <ul>
+            <li>Initial assessment</li>
+            <li>Care planning</li>
+            <li>Patient/family teaching</li>
+            <li>Unstable patients</li>
+            <li>IV push medications</li>
+            <li>Interpreting labs/data</li>
+          </ul>
+        </div>
+        <div class="delegation-card lpn">
+          <h3>💉 LPN/LVN</h3>
+          <ul>
+            <li>Stable patient care</li>
+            <li>Routine medications (oral, IM, SubQ)</li>
+            <li>Wound care</li>
+            <li>Urinary catheterization</li>
+            <li>NG tube management</li>
+            <li>Ongoing assessment (not initial)</li>
+          </ul>
+        </div>
+        <div class="delegation-card uap">
+          <h3>🧹 UAP/CNA</h3>
+          <ul>
+            <li>ADLs (bathing, feeding)</li>
+            <li>Vital signs (stable patients)</li>
+            <li>Ambulation assistance</li>
+            <li>Intake &amp; output recording</li>
+            <li>Specimen collection (urine)</li>
+            <li>Linen changes</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<style>
+  .page-header { margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid var(--color-border); }
+  .page-header h1 { font-size: 1.75rem; font-weight: 700; color: var(--color-primary-dark); }
+  .page-header p { color: var(--color-text-muted); margin-top: 0.4rem; }
+
+  .content { display: flex; flex-direction: column; gap: 1.75rem; }
+
+  .note-section { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow); }
+  .note-section h2 { font-size: 1.1rem; font-weight: 600; color: var(--color-primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--color-border); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+  th { background: var(--color-primary); color: white; padding: 0.6rem 0.75rem; text-align: left; }
+  td { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--color-border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: var(--color-bg); }
+  td.danger { color: var(--color-accent); background: #fff5f5 !important; }
+
+  .bullet-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.95rem; }
+  .bullet-list li { padding-left: 1.25rem; position: relative; line-height: 1.6; }
+  .bullet-list li::before { content: '•'; position: absolute; left: 0; color: var(--color-primary); font-weight: 700; }
+
+  .framework-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+  .framework-card { background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius); padding: 1rem; }
+  .framework-card h3 { font-size: 0.9rem; font-weight: 600; color: var(--color-primary); margin-bottom: 0.5rem; }
+  .framework-card ol { padding-left: 1.25rem; font-size: 0.875rem; display: flex; flex-direction: column; gap: 0.25rem; }
+  .framework-card .note { font-size: 0.8rem; color: var(--color-text-muted); margin-top: 0.5rem; font-style: italic; }
+
+  .delegation-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+  .delegation-card { border-radius: var(--radius); padding: 1rem; border: 1px solid var(--color-border); }
+  .delegation-card.rn { background: #e8f4f9; border-color: #b3d9ea; }
+  .delegation-card.lpn { background: #e8f5e9; border-color: #a5d6a7; }
+  .delegation-card.uap { background: #fff8e1; border-color: #ffe082; }
+  .delegation-card h3 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem; }
+  .delegation-card ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.85rem; }
+  .delegation-card li { padding-left: 1rem; position: relative; }
+  .delegation-card li::before { content: '–'; position: absolute; left: 0; }
+
+  @media (max-width: 700px) {
+    .framework-grid, .delegation-grid { grid-template-columns: 1fr; }
+  }
+</style>
