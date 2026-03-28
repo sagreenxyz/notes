@@ -1,4 +1,23 @@
 {
-  "generated": "2024-01-01T00:00:00.000Z",
-  "notes": []
+  "generated": "2026-03-28T19:55:08.375Z",
+  "notes": [
+    {
+      "id": 4,
+      "number": 4,
+      "title": "Arterial Blood Gas — Respiratory Acidosis Without Compensation",
+      "slug": "arterial-blood-gas-respiratory-acidosis-without-compensation",
+      "summary": "ABG results (pH 7.12, PaCO₂ 90 mm Hg, HCO₃⁻ 22 mEq/L) in an unresponsive client indicate respiratory acidosis without compensation — pH is low, PaCO₂ is elevated, and HCO₃⁻ remains within normal limits.",
+      "content": "## Clinical Scenario\n\nA client who is found unresponsive has arterial blood gases drawn with the following results:\n\n| Parameter | Patient Value | Normal Range |\n|-----------|--------------|------------------|\n| pH | 7.12 | 7.35–7.45 |\n| PaCO₂ | 90 mm Hg | 35–45 mm Hg |\n| HCO₃⁻ | 22 mEq/L | 21–28 mEq/L |\n\n## Interpretation\n\n**Condition: Respiratory Acidosis Without Compensation**\n\n- **pH** is 7.12 — *decreased* (below normal 7.35–7.45) → acidosis\n- **PaCO₂** is 90 mm Hg — *elevated* (above normal 35–45 mm Hg) → respiratory cause\n- **HCO₃⁻** is 22 mEq/L — *within normal limits* (21–28 mEq/L) → no metabolic compensation\n\n## Key Nursing Insight\n\nBecause the bicarbonate is still within normal limits, the kidneys have not had time to compensate for this acid-base disturbance. The pH remains outside normal limits, confirming the condition is **without compensation**.\n\n## ABG Interpretation Framework\n\n1. **Look at pH**: < 7.35 = acidosis; > 7.45 = alkalosis\n2. **Check PaCO₂**: Elevated in respiratory acidosis; decreased in respiratory alkalosis\n3. **Check HCO₃⁻**: Elevated in metabolic alkalosis; decreased in metabolic acidosis\n4. **Determine compensation**: If the compensating value has moved toward correcting pH, compensation is occurring",
+      "subject": "pathophysiology",
+      "systems": ["respiratory"],
+      "nclex": "physiological-integrity",
+      "nclex_sub": ["reduction-of-risk"],
+      "priority": "high",
+      "format": "card",
+      "labels": ["atomic", "note", "subject:pathophysiology", "system:respiratory", "nclex:physiological-integrity", "nclex_sub:reduction-of-risk", "priority:high", "format:card"],
+      "url": "https://github.com/sagreenxyz/notes/issues/4",
+      "created_at": "2026-03-28T19:54:38Z",
+      "updated_at": "2026-03-28T19:55:08Z"
+    }
+  ]
 }
