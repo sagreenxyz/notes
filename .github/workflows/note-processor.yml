@@ -410,7 +410,7 @@ jobs:
               issues, page = [], 1
               while True:
                   data, status = gh_api(
-                      f'/repos/{repo}/issues?labels=atomic&state=open'
+                      f'/repos/{repo}/issues?labels=atomic&state=all'
                       f'&per_page=100&page={page}'
                   )
                   if status != 200 or not data:

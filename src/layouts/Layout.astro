@@ -112,6 +112,11 @@ const { title, description = 'Nursing student notes and study resources' } = Ast
       @media (max-width: 600px) {
         nav { display: none; }
       }
+
+      .dynamic-notes { margin-top: 2rem; padding-top: 1.5rem; border-top: 2px solid var(--color-border); }
+      .dynamic-notes h2 { font-size: 1.15rem; font-weight: 600; color: var(--color-primary-dark); margin-bottom: 1rem; }
+      .note-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0.85rem; }
+      @media (max-width: 600px) { .note-grid { grid-template-columns: 1fr; } }
     </style>
   </head>
   <body>
