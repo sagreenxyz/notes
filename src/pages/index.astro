@@ -1,0 +1,137 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TopicCard from '../components/TopicCard.astro';
+
+const topics = [
+  {
+    title: 'Nursing Fundamentals',
+    description: 'Basic nursing skills, vital signs, patient assessment, and care planning.',
+    href: `${import.meta.env.BASE_URL}fundamentals`,
+    icon: '📋',
+  },
+  {
+    title: 'Anatomy & Physiology',
+    description: 'Body systems, structures, and physiological processes.',
+    href: `${import.meta.env.BASE_URL}anatomy`,
+    icon: '🫀',
+  },
+  {
+    title: 'Pharmacology',
+    description: 'Drug classifications, mechanisms of action, nursing implications, and side effects.',
+    href: `${import.meta.env.BASE_URL}pharmacology`,
+    icon: '💊',
+  },
+  {
+    title: 'Pathophysiology',
+    description: 'Disease processes, clinical manifestations, and nursing interventions.',
+    href: `${import.meta.env.BASE_URL}pathophysiology`,
+    icon: '🔬',
+  },
+  {
+    title: 'NCLEX Prep',
+    description: 'Practice questions, test-taking strategies, and key concepts for exam success.',
+    href: `${import.meta.env.BASE_URL}nclex`,
+    icon: '✏️',
+  },
+];
+---
+
+<Layout title="Home">
+  <section class="hero">
+    <h1>Welcome to Nursing Notes</h1>
+    <p class="lead">
+      A comprehensive study resource for nursing students — organized notes on fundamentals,
+      anatomy, pharmacology, pathophysiology, and NCLEX preparation.
+    </p>
+  </section>
+
+  <section class="topics">
+    <h2>Study Topics</h2>
+    <div class="card-grid">
+      {topics.map((topic) => (
+        <TopicCard {...topic} />
+      ))}
+    </div>
+  </section>
+
+  <section class="quick-tips">
+    <h2>Study Tips</h2>
+    <ul>
+      <li>Use the <strong>ADPIE</strong> framework (Assess, Diagnose, Plan, Implement, Evaluate) to structure your care plans.</li>
+      <li>Practice <strong>SBAR</strong> (Situation, Background, Assessment, Recommendation) for clinical communication.</li>
+      <li>Focus on <strong>priority setting</strong> using Maslow's Hierarchy when answering NCLEX-style questions.</li>
+      <li>Review lab values regularly — know critical values that require immediate action.</li>
+      <li>Connect pathophysiology to pharmacology: understand <em>why</em> a drug works, not just what it does.</li>
+    </ul>
+  </section>
+</Layout>
+
+<style>
+  .hero {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: white;
+    border-radius: var(--radius);
+    padding: 2.5rem 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+  }
+
+  .lead {
+    font-size: 1.05rem;
+    opacity: 0.9;
+    max-width: 680px;
+    line-height: 1.7;
+  }
+
+  .topics, .quick-tips {
+    margin-bottom: 2rem;
+  }
+
+  .topics h2, .quick-tips h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--color-primary-dark);
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--color-border);
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+
+  .quick-tips ul {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    box-shadow: var(--shadow);
+  }
+
+  .quick-tips li {
+    padding-left: 1.5rem;
+    position: relative;
+    font-size: 0.95rem;
+    color: var(--color-text);
+    line-height: 1.6;
+  }
+
+  .quick-tips li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--color-primary);
+    font-weight: 700;
+  }
+</style>
