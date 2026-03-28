@@ -1,0 +1,102 @@
+name: 📝 Nursing Note
+description: Submit a nursing note for the wiki. The agent will atomize and classify it automatically.
+title: "[Note] "
+labels: ["note"]
+body:
+  - type: input
+    id: title
+    attributes:
+      label: Note title
+      description: "Be specific — include the concept and context (e.g., 'Furosemide — Loop Diuretic', 'Serum Potassium — Critical Values')."
+      placeholder: "e.g., Furosemide — Loop Diuretic"
+    validations:
+      required: true
+
+  - type: textarea
+    id: content
+    attributes:
+      label: Note content
+      description: "Paste your raw notes here. The agent will atomize if the content covers multiple concepts."
+      placeholder: |
+        Describe the concept in as much detail as you have.
+        Tables, bullet points, and markdown are all welcome.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: subjects
+    attributes:
+      label: Subject area(s)
+      description: "Select all subject areas that apply. The AI will verify and may adjust."
+      multiple: true
+      options:
+        - pharmacology
+        - anatomy
+        - fundamentals
+        - pathophysiology
+        - nclex
+        - other
+    validations:
+      required: false
+
+  - type: dropdown
+    id: systems
+    attributes:
+      label: Body system(s)
+      description: "Select all body systems that apply."
+      multiple: true
+      options:
+        - cardiovascular
+        - renal
+        - respiratory
+        - neurological
+        - endocrine
+        - gastrointestinal
+        - musculoskeletal
+        - immune
+        - integumentary
+        - reproductive
+        - other
+    validations:
+      required: false
+
+  - type: dropdown
+    id: nclex_domain
+    attributes:
+      label: NCLEX domain
+      description: "Primary NCLEX client-needs category."
+      options:
+        - safe-care
+        - health-promotion
+        - psychosocial
+        - physiological-integrity
+    validations:
+      required: false
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Clinical priority
+      description: |
+        - **critical** — life-threatening / never-do errors
+        - **high** — always monitor / significant nursing implications
+        - **routine** — stable care / foundational knowledge
+      options:
+        - critical
+        - high
+        - routine
+    validations:
+      required: false
+
+  - type: dropdown
+    id: format
+    attributes:
+      label: Preferred format
+      description: "How should this note be displayed?"
+      options:
+        - table
+        - card
+        - list
+        - reference
+    validations:
+      required: false

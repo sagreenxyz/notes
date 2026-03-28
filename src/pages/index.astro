@@ -34,6 +34,33 @@ const topics = [
     icon: '✏️',
   },
 ];
+
+const browseViews = [
+  {
+    title: 'Browse by Subject',
+    description: 'View all atomic notes grouped by nursing subject area.',
+    href: `${import.meta.env.BASE_URL}by-subject`,
+    icon: '📚',
+  },
+  {
+    title: 'Browse by Body System',
+    description: 'View notes grouped by cardiovascular, renal, respiratory, and other systems.',
+    href: `${import.meta.env.BASE_URL}by-system`,
+    icon: '🫀',
+  },
+  {
+    title: 'Browse by NCLEX Domain',
+    description: 'View notes organized by NCLEX client-needs categories.',
+    href: `${import.meta.env.BASE_URL}by-nclex`,
+    icon: '✏️',
+  },
+  {
+    title: 'Browse by Clinical Priority',
+    description: 'View notes sorted by critical, high, and routine priority levels.',
+    href: `${import.meta.env.BASE_URL}by-priority`,
+    icon: '🎯',
+  },
+];
 ---
 
 <Layout title="Home">
@@ -50,6 +77,16 @@ const topics = [
     <div class="card-grid">
       {topics.map((topic) => (
         <TopicCard {...topic} />
+      ))}
+    </div>
+  </section>
+
+  <section class="topics browse-views">
+    <h2>Dynamic Wiki Views</h2>
+    <p class="section-desc">The same notes, browsable through four different lenses — so you can scan by different mental models.</p>
+    <div class="card-grid">
+      {browseViews.map((view) => (
+        <TopicCard {...view} />
       ))}
     </div>
   </section>
@@ -99,6 +136,13 @@ const topics = [
     color: var(--color-primary-dark);
     padding-bottom: 0.5rem;
     border-bottom: 2px solid var(--color-border);
+  }
+
+  .section-desc {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    margin-bottom: 1rem;
+    margin-top: -0.5rem;
   }
 
   .card-grid {

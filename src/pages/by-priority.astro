@@ -1,0 +1,162 @@
+---
+import Layout from '../layouts/Layout.astro';
+import NoteCard from '../components/NoteCard.astro';
+import notesData from '../data/notes.json';
+
+const notes = notesData.notes ?? [];
+
+const priorities = [
+  {
+    key: 'critical',
+    label: 'Critical',
+    icon: '🚨',
+    description: 'Life-threatening situations, never-do errors, immediate interventions.',
+    color: '#dc2626',
+    bgColor: '#fef2f2',
+    borderColor: '#fecaca',
+  },
+  {
+    key: 'high',
+    label: 'High',
+    icon: '⚠️',
+    description: 'Always monitor, significant risk, important nursing implications.',
+    color: '#d97706',
+    bgColor: '#fffbeb',
+    borderColor: '#fde68a',
+  },
+  {
+    key: 'routine',
+    label: 'Routine',
+    icon: '✅',
+    description: 'Stable care, standard procedures, foundational knowledge.',
+    color: '#16a34a',
+    bgColor: '#f0fdf4',
+    borderColor: '#bbf7d0',
+  },
+];
+
+const grouped = priorities
+  .map((p) => ({ ...p, notes: notes.filter((n) => n.priority === p.key) }))
+  .filter((g) => g.notes.length > 0);
+
+const totalNotes = notes.length;
+---
+
+<Layout
+  title="Browse by Clinical Priority"
+  description="Browse nursing notes organized by clinical priority level."
+>
+  <div class="page-header">
+    <h1>🎯 Browse by Clinical Priority</h1>
+    <p>All nursing notes organized by clinical priority — so readers can scan by different mental models.</p>
+    {totalNotes > 0 && <span class="total-badge">{totalNotes} note{totalNotes !== 1 ? 's' : ''}</span>}
+  </div>
+
+  {grouped.length === 0 ? (
+    <div class="empty-state">
+      <p>
+        No notes available yet. Submit a GitHub Issue with the <code>note</code> label
+        to start building your wiki.
+      </p>
+    </div>
+  ) : (
+    <div class="content">
+      {grouped.map((group) => (
+        <section
+          class="group-section"
+          style={`--g-color: ${group.color}; --g-bg: ${group.bgColor}; --g-border: ${group.borderColor};`}
+        >
+          <div class="group-header">
+            <h2>
+              {group.icon} {group.label}
+              <span class="count">{group.notes.length}</span>
+            </h2>
+            <p class="group-desc">{group.description}</p>
+          </div>
+          <div class="note-grid">
+            {group.notes.map((note) => <NoteCard note={note} />)}
+          </div>
+        </section>
+      ))}
+    </div>
+  )}
+</Layout>
+
+<style>
+  .page-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .page-header h1 { font-size: 1.75rem; font-weight: 700; color: var(--color-primary-dark); }
+  .page-header p  { color: var(--color-text-muted); }
+
+  .total-badge {
+    display: inline-block;
+    background: var(--color-primary);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.2rem 0.65rem;
+    border-radius: 9999px;
+    width: fit-content;
+  }
+
+  .empty-state {
+    background: var(--color-surface);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius);
+    padding: 2.5rem;
+    text-align: center;
+    color: var(--color-text-muted);
+  }
+  .empty-state code { background: var(--color-bg); padding: 0.1rem 0.4rem; border-radius: 0.25rem; font-size: 0.9em; }
+
+  .content { display: flex; flex-direction: column; gap: 2rem; }
+
+  .group-section {
+    background: var(--g-bg);
+    border: 1px solid var(--g-border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+  }
+
+  .group-header { margin-bottom: 1rem; }
+
+  .group-section h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--g-color);
+    margin-bottom: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .group-desc {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .count {
+    font-size: 0.75rem;
+    font-weight: 700;
+    background: var(--g-color);
+    color: white;
+    padding: 0.1rem 0.5rem;
+    border-radius: 9999px;
+    margin-left: auto;
+  }
+
+  .note-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 0.85rem;
+  }
+
+  @media (max-width: 600px) { .note-grid { grid-template-columns: 1fr; } }
+</style>

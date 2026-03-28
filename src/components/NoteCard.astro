@@ -1,0 +1,126 @@
+---
+interface Note {
+  id: number;
+  number: number;
+  title: string;
+  slug: string;
+  summary: string;
+  subject: string;
+  systems: string[];
+  nclex: string;
+  nclex_sub: string[];
+  priority: string;
+  format: string;
+  labels: string[];
+  url: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface Props {
+  note: Note;
+}
+
+const { note } = Astro.props;
+
+const priorityConfig: Record<string, { color: string; label: string }> = {
+  critical: { color: '#dc2626', label: '🚨 Critical' },
+  high:     { color: '#d97706', label: '⚠️ High' },
+  routine:  { color: '#16a34a', label: '✅ Routine' },
+};
+
+const pc = priorityConfig[note.priority] ?? { color: '#64748b', label: note.priority };
+---
+
+<a href={note.url} target="_blank" rel="noopener noreferrer" class="note-card">
+  <div class="note-header">
+    <h3 class="note-title">{note.title}</h3>
+    <span class="priority-badge" style={`background: ${pc.color}`}>{pc.label}</span>
+  </div>
+  {note.summary && <p class="summary">{note.summary}</p>}
+  <div class="tags">
+    {note.subject && <span class="tag tag-subject">{note.subject}</span>}
+    {note.nclex && <span class="tag tag-nclex">{note.nclex}</span>}
+    {note.systems?.slice(0, 3).map((s) => <span class="tag tag-system">{s}</span>)}
+    {note.systems?.length > 3 && <span class="tag tag-more">+{note.systems.length - 3} more</span>}
+  </div>
+</a>
+
+<style>
+  .note-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.25rem;
+    box-shadow: var(--shadow);
+    color: var(--color-text);
+    text-decoration: none;
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+  }
+
+  .note-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 4px 12px rgba(15, 107, 142, 0.15);
+    transform: translateY(-2px);
+    text-decoration: none;
+  }
+
+  .note-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .note-title {
+    font-size: 0.975rem;
+    font-weight: 600;
+    color: var(--color-primary-dark);
+    line-height: 1.4;
+    flex: 1;
+  }
+
+  .priority-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: white;
+    padding: 0.2rem 0.5rem;
+    border-radius: 9999px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .summary {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.1rem;
+  }
+
+  .tag {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 9999px;
+    text-transform: lowercase;
+  }
+
+  .tag-subject { background: #dbeafe; color: #1d4ed8; }
+  .tag-nclex   { background: #fce7f3; color: #9d174d; }
+  .tag-system  { background: #d1fae5; color: #065f46; }
+  .tag-more    { background: var(--color-bg); color: var(--color-text-muted); border: 1px solid var(--color-border); }
+</style>

@@ -1,0 +1,525 @@
+name: Note Processor
+
+on:
+  issues:
+    types: [opened, labeled, edited]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  # ──────────────────────────────────────────────────────────────────────────
+  # Job 1 — ATOMIZE
+  # Runs when an issue with the `note` label is opened/edited/note-labeled
+  # and has not yet been classified as atomic or composite.
+  # ──────────────────────────────────────────────────────────────────────────
+  atomize:
+    name: Atomize Note
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'issues' &&
+      contains(github.event.issue.labels.*.name, 'note') &&
+      !contains(github.event.issue.labels.*.name, 'atomic') &&
+      !contains(github.event.issue.labels.*.name, 'needs-split') &&
+      (
+        github.event.action == 'opened' ||
+        github.event.action == 'edited' ||
+        (github.event.action == 'labeled' && github.event.label.name == 'note')
+      )
+    outputs:
+      is_atomic: ${{ steps.analyze.outputs.is_atomic }}
+
+    steps:
+      - name: Analyze note with GitHub Models (gpt-4o)
+        id: analyze
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          python3 << 'PYEOF'
+          import os, json, urllib.request, urllib.error, re
+
+          title        = os.environ['ISSUE_TITLE']
+          body         = os.environ['ISSUE_BODY'] or ''
+          token        = os.environ['GITHUB_TOKEN']
+          issue_number = os.environ['ISSUE_NUMBER']
+          repo         = os.environ['GITHUB_REPOSITORY']
+
+          # ── Call GitHub Models API ─────────────────────────────────────────
+          system_prompt = (
+              'You are a nursing education content analyst. '
+              'An "atomic note" covers exactly one concept — one drug, one disease, '
+              'one lab value, one framework, or one procedure. It must be independently '
+              'understandable and cannot be meaningfully split further. '
+              'Respond with JSON only, no markdown fences.'
+          )
+          user_prompt = (
+              f'Analyze this nursing note and determine if it is atomic or composite.\n'
+              f'Title: {title}\n'
+              f'Body: {body}\n\n'
+              f'Respond with JSON: {{"isAtomic": true, "reason": "...", '
+              f'"proposedAtoms": [{{"title": "...", "summary": "...", "content": "..."}}]}}\n'
+              f'proposedAtoms is only required if isAtomic is false.'
+          )
+
+          payload = {
+              'model': 'gpt-4o',
+              'messages': [
+                  {'role': 'system', 'content': system_prompt},
+                  {'role': 'user',   'content': user_prompt},
+              ],
+              'response_format': {'type': 'json_object'},
+          }
+
+          req = urllib.request.Request(
+              'https://models.inference.ai.azure.com/chat/completions',
+              data=json.dumps(payload).encode(),
+              headers={
+                  'Content-Type':  'application/json',
+                  'Authorization': f'Bearer {token}',
+              },
+          )
+
+          try:
+              with urllib.request.urlopen(req) as resp:
+                  result   = json.loads(resp.read())
+              content  = result['choices'][0]['message']['content']
+              analysis = json.loads(content)
+          except Exception as exc:
+              print(f'GitHub Models API error: {exc}')
+              # Default to atomic so the note is not silently dropped
+              analysis = {'isAtomic': True, 'reason': f'API error ({exc}), defaulting to atomic.'}
+
+          is_atomic     = bool(analysis.get('isAtomic', True))
+          proposed_atoms = analysis.get('proposedAtoms', [])
+          reason        = analysis.get('reason', '')
+
+          print(f'isAtomic={is_atomic}  reason={reason}')
+
+          # ── Write job outputs ──────────────────────────────────────────────
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
+              fh.write(f'is_atomic={"true" if is_atomic else "false"}\n')
+
+          # ── GitHub API helpers ─────────────────────────────────────────────
+          def gh_api(method, path, data=None):
+              url  = f'https://api.github.com{path}'
+              hdrs = {
+                  'Accept':               'application/vnd.github.v3+json',
+                  'Authorization':        f'Bearer {token}',
+                  'X-GitHub-Api-Version': '2022-11-28',
+              }
+              req2 = urllib.request.Request(url, method=method, headers=hdrs)
+              if data:
+                  req2.data = json.dumps(data).encode()
+                  req2.add_header('Content-Type', 'application/json')
+              try:
+                  with urllib.request.urlopen(req2) as r:
+                      return json.loads(r.read()), r.status
+              except urllib.error.HTTPError as e:
+                  try:
+                      return json.loads(e.read()), e.code
+                  except Exception:
+                      return {}, e.code
+
+          def ensure_label(name, color, description=''):
+              _, status = gh_api('GET', f'/repos/{repo}/labels/{urllib.parse.quote(name)}')
+              if status == 404:
+                  gh_api('POST', f'/repos/{repo}/labels',
+                         data={'name': name, 'color': color, 'description': description})
+
+          import urllib.parse
+
+          # ── Handle composite note ──────────────────────────────────────────
+          if not is_atomic:
+              ensure_label('needs-split', 'e4e669', 'Note contains multiple concepts; needs atomization')
+              gh_api('POST', f'/repos/{repo}/issues/{issue_number}/labels',
+                     data={'labels': ['needs-split']})
+
+              lines = ['## 🔬 Atomization Proposal',
+                       '',
+                       'This note contains multiple concepts. Proposed split:',
+                       '']
+              for atom in proposed_atoms:
+                  lines.append(f'- [ ] {atom.get("title", "(untitled)")}')
+              lines += ['',
+                        f'> **Reason**: {reason}',
+                        '',
+                        '_Please create a separate issue for each atom above, then close this issue._']
+
+              gh_api('POST', f'/repos/{repo}/issues/{issue_number}/comments',
+                     data={'body': '\n'.join(lines)})
+              print('Posted atomization proposal comment.')
+
+          # ── Handle atomic note ─────────────────────────────────────────────
+          else:
+              ensure_label('atomic', '0075ca', 'Single-concept atomic note')
+              gh_api('POST', f'/repos/{repo}/issues/{issue_number}/labels',
+                     data={'labels': ['atomic']})
+              print('Added atomic label.')
+          PYEOF
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # Job 2 — CLASSIFY
+  # Runs after atomize succeeds with is_atomic=true.
+  # ──────────────────────────────────────────────────────────────────────────
+  classify:
+    name: Classify Note
+    needs: atomize
+    runs-on: ubuntu-latest
+    if: needs.atomize.result == 'success' && needs.atomize.outputs.is_atomic == 'true'
+
+    steps:
+      - name: Classify with GitHub Models and apply taxonomy labels
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          python3 << 'PYEOF'
+          import os, json, urllib.request, urllib.error, urllib.parse
+
+          title        = os.environ['ISSUE_TITLE']
+          body         = os.environ['ISSUE_BODY'] or ''
+          token        = os.environ['GITHUB_TOKEN']
+          issue_number = os.environ['ISSUE_NUMBER']
+          repo         = os.environ['GITHUB_REPOSITORY']
+
+          # ── Call GitHub Models API for classification ──────────────────────
+          system_prompt = (
+              'You are a nursing education taxonomy classifier. '
+              'Map the note to the correct labels from the provided taxonomy. '
+              'Respond with JSON only, no markdown fences.'
+          )
+          user_prompt = (
+              f'Classify this nursing note.\n'
+              f'Title: {title}\n'
+              f'Body: {body}\n\n'
+              f'Taxonomy:\n'
+              f'- subject: pharmacology | anatomy | fundamentals | pathophysiology | nclex\n'
+              f'- system: cardiovascular | renal | respiratory | neurological | endocrine | '
+              f'gastrointestinal | musculoskeletal | immune | integumentary | reproductive '
+              f'(pick all that apply)\n'
+              f'- nclex: safe-care | health-promotion | psychosocial | physiological-integrity\n'
+              f'- nclex_sub: basic-care | pharmacological-therapies | reduction-of-risk | '
+              f'physiological-adaptation | management-of-care | safety | growth-development | '
+              f'mental-health (pick all that apply)\n'
+              f'- priority: critical | high | routine\n'
+              f'- format: table | card | list | reference\n\n'
+              f'Respond with JSON: {{"subject": "...", "systems": ["..."], "nclex": "...", '
+              f'"nclex_sub": ["..."], "priority": "...", "format": "...", '
+              f'"slug": "kebab-case-slug-for-this-note", "summary": "One sentence summary."}}'
+          )
+
+          payload = {
+              'model': 'gpt-4o',
+              'messages': [
+                  {'role': 'system', 'content': system_prompt},
+                  {'role': 'user',   'content': user_prompt},
+              ],
+              'response_format': {'type': 'json_object'},
+          }
+
+          req = urllib.request.Request(
+              'https://models.inference.ai.azure.com/chat/completions',
+              data=json.dumps(payload).encode(),
+              headers={
+                  'Content-Type':  'application/json',
+                  'Authorization': f'Bearer {token}',
+              },
+          )
+
+          with urllib.request.urlopen(req) as resp:
+              result = json.loads(resp.read())
+
+          classification = json.loads(result['choices'][0]['message']['content'])
+          print(f'Classification: {json.dumps(classification, indent=2)}')
+
+          # ── GitHub API helpers ─────────────────────────────────────────────
+          def gh_api(method, path, data=None):
+              url  = f'https://api.github.com{path}'
+              hdrs = {
+                  'Accept':               'application/vnd.github.v3+json',
+                  'Authorization':        f'Bearer {token}',
+                  'X-GitHub-Api-Version': '2022-11-28',
+              }
+              req2 = urllib.request.Request(url, method=method, headers=hdrs)
+              if data:
+                  req2.data = json.dumps(data).encode()
+                  req2.add_header('Content-Type', 'application/json')
+              try:
+                  with urllib.request.urlopen(req2) as r:
+                      return json.loads(r.read()), r.status
+              except urllib.error.HTTPError as e:
+                  try:
+                      return json.loads(e.read()), e.code
+                  except Exception:
+                      return {}, e.code
+
+          LABEL_COLORS = {
+              'subject':   '0075ca',
+              'system':    'e4e669',
+              'nclex':     'd93f0b',
+              'nclex_sub': 'f9d0c4',
+              'priority':  'e99695',
+              'format':    'bfd4f2',
+          }
+
+          def ensure_label(name, color):
+              encoded = urllib.parse.quote(name, safe='')
+              _, status = gh_api('GET', f'/repos/{repo}/labels/{encoded}')
+              if status == 404:
+                  gh_api('POST', f'/repos/{repo}/labels',
+                         data={'name': name, 'color': color})
+
+          # ── Build and apply labels ─────────────────────────────────────────
+          labels = []
+
+          subject = classification.get('subject', 'other')
+          labels.append(f'subject:{subject}')
+
+          for system in classification.get('systems', []):
+              labels.append(f'system:{system}')
+
+          nclex = classification.get('nclex', '')
+          if nclex:
+              labels.append(f'nclex:{nclex}')
+
+          for sub in classification.get('nclex_sub', []):
+              labels.append(f'nclex_sub:{sub}')
+
+          priority = classification.get('priority', 'routine')
+          labels.append(f'priority:{priority}')
+
+          fmt = classification.get('format', 'card')
+          labels.append(f'format:{fmt}')
+
+          for label in labels:
+              prefix = label.split(':')[0]
+              color  = LABEL_COLORS.get(prefix, 'cccccc')
+              ensure_label(label, color)
+
+          gh_api('POST', f'/repos/{repo}/issues/{issue_number}/labels',
+                 data={'labels': labels})
+          print(f'Applied labels: {labels}')
+
+          # ── Post classification comment with metadata for rebuild step ──────
+          slug    = classification.get('slug', '')
+          summary = classification.get('summary', '')
+          meta    = json.dumps({'slug': slug, 'summary': summary})
+
+          priority_icons = {'critical': '🚨', 'high': '⚠️', 'routine': '✅'}
+          p_icon = priority_icons.get(priority, '')
+
+          systems_str  = ', '.join(classification.get('systems', [])) or '—'
+          nclex_sub_str = ', '.join(classification.get('nclex_sub', [])) or '—'
+
+          comment = (
+              f'<!-- notes-ai-metadata: {meta} -->\n'
+              f'## 🏷️ Classification Applied\n\n'
+              f'| Field | Value |\n'
+              f'|---|---|\n'
+              f'| **Subject** | `{subject}` |\n'
+              f'| **Systems** | {systems_str} |\n'
+              f'| **NCLEX Domain** | `{nclex}` |\n'
+              f'| **NCLEX Sub** | {nclex_sub_str} |\n'
+              f'| **Priority** | {p_icon} `{priority}` |\n'
+              f'| **Format** | `{fmt}` |\n'
+              f'| **Slug** | `{slug}` |\n\n'
+              f'> {summary}\n\n'
+              f'_This note will be included in the next `notes.json` rebuild._'
+          )
+
+          gh_api('POST', f'/repos/{repo}/issues/{issue_number}/comments',
+                 data={'body': comment})
+          print('Posted classification comment.')
+          PYEOF
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # Job 3 — REBUILD
+  # Regenerates src/data/notes.json from ALL issues labeled `atomic`.
+  # Runs after classify succeeds, or on workflow_dispatch, or when a label
+  # is added to an already-atomic issue.
+  # ──────────────────────────────────────────────────────────────────────────
+  rebuild:
+    name: Rebuild notes.json
+    needs: [atomize, classify]
+    runs-on: ubuntu-latest
+    if: |
+      always() && !cancelled() && (
+        github.event_name == 'workflow_dispatch' ||
+        needs.classify.result == 'success' ||
+        (
+          github.event_name == 'issues' &&
+          needs.atomize.result == 'skipped' &&
+          contains(github.event.issue.labels.*.name, 'atomic')
+        )
+      )
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Rebuild src/data/notes.json from atomic issues
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          python3 << 'PYEOF'
+          import os, json, re, urllib.request, urllib.error, urllib.parse
+          from datetime import datetime, timezone
+
+          token = os.environ['GITHUB_TOKEN']
+          repo  = os.environ['GITHUB_REPOSITORY']
+
+          # ── GitHub API helper ──────────────────────────────────────────────
+          def gh_api(path):
+              url  = f'https://api.github.com{path}'
+              hdrs = {
+                  'Accept':               'application/vnd.github.v3+json',
+                  'Authorization':        f'Bearer {token}',
+                  'X-GitHub-Api-Version': '2022-11-28',
+              }
+              req = urllib.request.Request(url, headers=hdrs)
+              try:
+                  with urllib.request.urlopen(req) as r:
+                      return json.loads(r.read()), r.status
+              except urllib.error.HTTPError as e:
+                  try:
+                      return json.loads(e.read()), e.code
+                  except Exception:
+                      return {}, e.code
+
+          # ── Fetch all issues with `atomic` label (paginated) ───────────────
+          def get_all_atomic_issues():
+              issues, page = [], 1
+              while True:
+                  data, status = gh_api(
+                      f'/repos/{repo}/issues?labels=atomic&state=open'
+                      f'&per_page=100&page={page}'
+                  )
+                  if status != 200 or not data:
+                      break
+                  issues.extend(data)
+                  if len(data) < 100:
+                      break
+                  page += 1
+              return issues
+
+          # ── Parse taxonomy from issue labels ───────────────────────────────
+          def parse_taxonomy(labels):
+              taxonomy = {
+                  'subject':   'other',
+                  'systems':   [],
+                  'nclex':     '',
+                  'nclex_sub': [],
+                  'priority':  'routine',
+                  'format':    'card',
+              }
+              for lbl in labels:
+                  name = lbl['name']
+                  if   name.startswith('subject:'):   taxonomy['subject']   = name[8:]
+                  elif name.startswith('system:'):    taxonomy['systems'].append(name[7:])
+                  elif name.startswith('nclex_sub:'): taxonomy['nclex_sub'].append(name[10:])
+                  elif name.startswith('nclex:'):     taxonomy['nclex']     = name[6:]
+                  elif name.startswith('priority:'):  taxonomy['priority']  = name[9:]
+                  elif name.startswith('format:'):    taxonomy['format']    = name[7:]
+              return taxonomy
+
+          # ── Try to get AI metadata from classification comment ─────────────
+          def get_ai_metadata(issue_number):
+              data, status = gh_api(f'/repos/{repo}/issues/{issue_number}/comments')
+              if status != 200:
+                  return None
+              for comment in reversed(data):  # most recent first
+                  body = comment.get('body', '')
+                  m = re.search(r'<!--\s*notes-ai-metadata:\s*(\{[^}]+\})\s*-->', body)
+                  if m:
+                      try:
+                          return json.loads(m.group(1))
+                      except Exception:
+                          pass
+              return None
+
+          # ── Slugify a string ───────────────────────────────────────────────
+          def slugify(text):
+              text = text.lower()
+              text = re.sub(r'[^a-z0-9\s-]', '', text)
+              text = re.sub(r'[\s-]+', '-', text).strip('-')
+              return text
+
+          # ── Build notes list ───────────────────────────────────────────────
+          issues = get_all_atomic_issues()
+          print(f'Found {len(issues)} atomic issues.')
+
+          notes = []
+          for issue in issues:
+              labels   = issue.get('labels', [])
+              taxonomy = parse_taxonomy(labels)
+              ai_meta  = get_ai_metadata(issue['number'])
+
+              if ai_meta:
+                  slug    = ai_meta.get('slug') or slugify(issue['title'])
+                  summary = ai_meta.get('summary') or ''
+              else:
+                  slug    = slugify(issue['title'])
+                  summary = ''
+
+              if not summary:
+                  raw     = (issue.get('body') or '').replace('\n', ' ').strip()
+                  summary = raw[:200] + ('…' if len(raw) > 200 else '')
+
+              notes.append({
+                  'id':         issue['number'],
+                  'number':     issue['number'],
+                  'title':      issue['title'],
+                  'slug':       slug,
+                  'summary':    summary,
+                  'content':    issue.get('body') or '',
+                  **taxonomy,
+                  'labels':     [lbl['name'] for lbl in labels],
+                  'url':        issue['html_url'],
+                  'created_at': issue['created_at'],
+                  'updated_at': issue['updated_at'],
+              })
+
+          # Sort: critical first, then high, then routine; within each by creation date
+          priority_order = {'critical': 0, 'high': 1, 'routine': 2}
+          notes.sort(key=lambda n: (priority_order.get(n['priority'], 3), n['created_at']))
+
+          output = {
+              'generated': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.000Z'),
+              'notes':     notes,
+          }
+
+          os.makedirs('src/data', exist_ok=True)
+          with open('src/data/notes.json', 'w') as fh:
+              json.dump(output, fh, indent=2)
+
+          print(f'Wrote src/data/notes.json with {len(notes)} notes.')
+          PYEOF
+
+      - name: Commit and push notes.json
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/data/notes.json
+          git diff --staged --quiet \
+            && echo "notes.json unchanged — nothing to commit." \
+            || git commit -m "chore: rebuild notes.json from atomic issues [$(date -u +%Y-%m-%dT%H:%M:%SZ)]"
+          git push
