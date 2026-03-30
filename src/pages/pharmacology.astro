@@ -1,5 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import NoteCard from '../components/NoteCard.astro';
+import notesData from '../data/notes.json';
+
+const subjectNotes = (notesData.notes ?? []).filter((n) => n.subject === 'pharmacology');
 ---
 
 <Layout
@@ -108,6 +112,15 @@ import Layout from '../layouts/Layout.astro';
       </ul>
     </section>
   </div>
+
+  {subjectNotes.length > 0 && (
+    <section class="dynamic-notes">
+      <h2>📝 Notes from the Wiki ({subjectNotes.length})</h2>
+      <div class="note-grid">
+        {subjectNotes.map((note) => <NoteCard note={note} />)}
+      </div>
+    </section>
+  )}
 </Layout>
 
 <style>
